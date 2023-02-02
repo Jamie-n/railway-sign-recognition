@@ -1,8 +1,4 @@
-from ultralytics import YOLO
+import gui.GuiController as Gui
 
-model = YOLO("../pretrained/yolov8n.pt")
-
-results = model.train(data="dataset.yaml", epochs=50, cache="ram", pretrained=True)
-results = model.val()
-success = model.export(format="onnx")  # export the model to ONNX format
-
+if __name__ == '__main__':
+    Gui.initialize()
