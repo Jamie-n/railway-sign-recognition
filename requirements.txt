@@ -1,4 +1,0 @@
-mss==7.0.1
-numpy==1.21.6
-opencv_python==4.7.0.68
-ultralytics==8.0.17
