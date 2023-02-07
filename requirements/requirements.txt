@@ -1,6 +1,5 @@
 mss==7.0.1
 numpy==1.21.6
 opencv_python==4.7.0.68
-PyQt5==5.15.8
 ultralytics==8.0.17
 Kivy==2.1.0
