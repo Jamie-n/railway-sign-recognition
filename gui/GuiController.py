@@ -6,7 +6,7 @@ class MyGridLayout(Widget):
     pass
 
 
-class MyApp(App):
+class SpeedControllerApp(App):
     def build(self):
         Window.size = (1260, 720)
 
@@ -14,4 +14,4 @@ class MyApp(App):
 
 
 def initialize():
-    MyApp().run()
+    SpeedControllerApp().run()
