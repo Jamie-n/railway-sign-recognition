@@ -1,8 +1,6 @@
 #:import rgba kivy.utils.get_color_from_hex
 
 <MyGridLayout>
-
-
     FloatLayout:
         size: root.width, root.height
 
@@ -16,15 +14,18 @@
 
                 Button:
                     text: "Settings"
+                    on_press: root.open_settings()
 
                 Button:
                     text: "Start Detection"
+                    id: start_detection_button
+                    on_press: root.begin_detection()
 
                 Button:
                     text: "Stop Detection"
                     disabled: True
-
-
+                    id: stop_detection_button
+                    on_press: root.halt_detection()
 
             GridLayout:
                 cols:2
@@ -48,12 +49,14 @@
                     text: '00'
                     bold: True
                     font_size: 32
+                    id: current_speed_value
 
 
                 Label:
                     text: '00'
                     bold: True
                     font_size: 32
+                    id: current_limit_value
 
 
 
@@ -64,25 +67,21 @@
 
                     Image:
 
-
                     GridLayout:
                         cols: 2
                         Slider:
-                            id: slider
+                            id: throttle_slider
                             min: 0
                             max: 100
                             step: 1
                             orientation: 'vertical'
 
                         Slider:
-                            id: slider
+                            id: brake_slider
                             min: 0
                             max: 100
                             step: 1
                             orientation: 'vertical'
-
-
-
 
                 GridLayout:
                     cols: 2
@@ -106,9 +105,65 @@
                             bold: True
                             font_size: 32
 
+<SettingsPopup>
+    size_hint: .75,.75
+    auto_dismiss: False
+    title: "Settings"
+
+    AnchorLayout:
+        GridLayout:
+            rows: 10
 
 
+            GridLayout:
+                cols:2
+                padding:0,10
 
+                Label:
+                    text: "Capture Height:"
+                TextInput:
+                    id: "input"
+                    multiline: False
+
+            GridLayout:
+                cols:2
+                padding:0,10
+                Label:
+                    text: "Capture Width:"
+                TextInput:
+                    id: "input"
+                    multiline: False
+
+            GridLayout:
+                cols:2
+                padding:0,10
+                Label:
+                    text: "Capture Offset:"
+                TextInput:
+                    id: "input"
+                    multiline: False
+
+            GridLayout:
+                cols:2
+                padding:0,10
+                Label:
+                    text: "Offset Direction:"
+                TextInput:
+                    id: "input"
+                    multiline: False
+
+            GridLayout:
+                cols:2
+                padding:0,10
+                Label:
+                    text: "DLL Path"
+                TextInput:
+                    id: "input"
+                    multiline: False
+
+            Button:
+                text: "Save Settings"
+                on_press: root.save_settings()
 
 
 
