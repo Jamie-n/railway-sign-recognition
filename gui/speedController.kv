@@ -135,39 +135,66 @@
             id: settings_popup
             rows: 7
             Label:
+                size_hint_y: None
+                height:40
                 text: "Capture Height:"
             TextInput:
+                size_hint_y: None
+                height:30
                 id: CAPTURE_HEIGHT
                 multiline: False
 
             Label:
+                size_hint_y: None
+                height:40
                 text: "Capture Width:"
             TextInput:
+                size_hint_y: None
+                height:30
                 id: CAPTURE_WIDTH
                 multiline: False
 
             Label:
+                size_hint_y: None
+                height:40
                 text: "Capture Offset:"
             TextInput:
+                size_hint_y: None
+                height:30
                 id: CAPTURE_OFFSET
                 multiline: False
 
             Label:
+                size_hint_y: None
+                height:40
                 text: "Offset Direction:"
             TextInput:
+                size_hint_y: None
+                height:30
                 id: CAPTURE_OFFSET_DIRECTION
                 multiline: False
 
             Label:
+                size_hint_y: None
+                height:40
                 text: "DLL Path"
             TextInput:
+                size_hint_y: None
+                height:30
                 id: DLL_PATH
                 multiline: False
 
-            Button:
-                text: "Cancel"
-                on_press: root.save_settings()
+            GridLayout:
+                cols:2
+                padding: 5
 
-            Button:
-                text: "Save Settings"
-                on_press: root.save_settings()
+                Button:
+                    text: "Cancel"
+
+
+                    on_press: root.save_settings()
+
+                Button:
+                    text: "Save Settings"
+
+                    on_press: root.save_settings()
