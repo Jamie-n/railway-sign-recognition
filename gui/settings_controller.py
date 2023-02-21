@@ -1,40 +1,27 @@
-import json
-from utils import constants
 from kivy.uix.popup import Popup
 
-
-def get_settings_from_file():
-    with open(constants.SETTINGS_PATH) as json_file:
-        return json.load(json_file)
+import utils.settings as s
+import utils.utilities as utilities
 
 
 class SettingsPopup(Popup):
-    settings_dict = dict
-    capture_height_input = ''
-    capture_width_input = ''
+
+    settings_manager = s.Settings()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.capture_height_input = self.ids.capture_height_input
-        self.capture_width_input = self.ids.capture_width_input
+
+        for ident, element in self.ids.items():
+            if utilities.is_text_input(element):
+                element.text = self.settings_manager.get_setting_value(ident)
 
     def show_settings(self):
         self.open()
-        self.settings_dict = get_settings_from_file()
-
-        self.capture_height_input.text = self.get_setting(constants.CAPTURE_HEIGHT)
-        self.capture_width_input.text = self.get_setting(constants.CAPTURE_WIDTH)
-
 
     def save_settings(self):
+        for ident, element in self.ids.items():
+            if utilities.is_text_input(element):
+                self.settings_manager.set_setting_value(ident, element.text)
 
-        self.set_setting(constants.CAPTURE_HEIGHT, self.ids.capture_height_input.text)
-        print(self.settings_dict)
+        self.settings_manager.write_to_file()
         self.dismiss()
-
-    def get_setting(self, value: str):
-        return str(self.settings_dict[value])
-
-    def set_setting(self, key: str, value: str):
-        self.settings_dict[key] = value
-

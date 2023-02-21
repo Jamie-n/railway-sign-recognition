@@ -1,4 +1,5 @@
 #:import rgba kivy.utils.get_color_from_hex
+#:import constants utils.constants
 
 <InterfaceController>
     FloatLayout:
@@ -131,56 +132,42 @@
 
     AnchorLayout:
         GridLayout:
-            rows: 10
-            GridLayout:
-                cols:2
-                padding:0,10
+            id: settings_popup
+            rows: 7
+            Label:
+                text: "Capture Height:"
+            TextInput:
+                id: CAPTURE_HEIGHT
+                multiline: False
 
-                Label:
-                    text: "Capture Height:"
-                TextInput:
-                    id: capture_height_input
-                    multiline: False
+            Label:
+                text: "Capture Width:"
+            TextInput:
+                id: CAPTURE_WIDTH
+                multiline: False
 
-            GridLayout:
-                cols:2
-                padding:0,10
-                Label:
-                    text: "Capture Width:"
-                TextInput:
-                    id: capture_width_input
-                    multiline: False
+            Label:
+                text: "Capture Offset:"
+            TextInput:
+                id: CAPTURE_OFFSET
+                multiline: False
 
-            GridLayout:
-                cols:2
-                padding:0,10
-                Label:
-                    text: "Capture Offset:"
-                TextInput:
-                    id: "input"
-                    multiline: False
+            Label:
+                text: "Offset Direction:"
+            TextInput:
+                id: CAPTURE_OFFSET_DIRECTION
+                multiline: False
 
-            GridLayout:
-                cols:2
-                padding:0,10
-                Label:
-                    text: "Offset Direction:"
-                TextInput:
-                    id: "input"
-                    multiline: False
+            Label:
+                text: "DLL Path"
+            TextInput:
+                id: DLL_PATH
+                multiline: False
 
-            GridLayout:
-                cols:2
-                padding:0,10
-                Label:
-                    text: "DLL Path"
-                TextInput:
-                    id: "input"
-                    multiline: False
+            Button:
+                text: "Cancel"
+                on_press: root.save_settings()
 
             Button:
                 text: "Save Settings"
                 on_press: root.save_settings()
-
-
-
