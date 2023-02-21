@@ -1,6 +1,6 @@
 #:import rgba kivy.utils.get_color_from_hex
 
-<MyGridLayout>
+<InterfaceController>
     FloatLayout:
         size: root.width, root.height
 
@@ -38,11 +38,11 @@
                     bold: True
                     font_size: 32
 
-
                 Label:
                     text: 'Current Limit'
                     bold: True
                     font_size: 32
+
 
 
                 Label:
@@ -50,6 +50,7 @@
                     bold: True
                     font_size: 32
                     id: current_speed_value
+
 
 
                 Label:
@@ -67,6 +68,7 @@
 
                     Image:
 
+
                     GridLayout:
                         cols: 2
                         Slider:
@@ -75,6 +77,9 @@
                             max: 100
                             step: 1
                             orientation: 'vertical'
+                            value_track_color: (1, 0, 0, 1)
+                            value_track: True
+                            background_color: (1,0, 0, 1)
 
                         Slider:
                             id: brake_slider
@@ -82,6 +87,25 @@
                             max: 100
                             step: 1
                             orientation: 'vertical'
+                            value_track_color: (1, 0, 0, 1)
+                            value_track: True
+
+                        Label:
+                            size_hint_y: None
+                            height: 50
+                            line_height: 0
+                            text: "Throttle"
+                            bold: True
+                            font_size: 20
+
+                        Label:
+                            size_hint_y: None
+                            height: 50
+                            line_height: 0
+                            text: "Brake"
+                            bold: True
+                            font_size: 20
+
 
                 GridLayout:
                     cols: 2
@@ -89,21 +113,16 @@
                     size_hint_y: None
 
                     Button:
-                        text: "Accept"
+                        text: "Acknowledge"
                         font_size: 32
                         bold: True
+                        background_color: (0, 2, 0, 1)
 
-                    GridLayout:
-                        cols: 2
-                        Label:
-                            text: "Throttle"
-                            bold: True
-                            font_size: 32
-
-                        Label:
-                            text: "Brake"
-                            bold: True
-                            font_size: 32
+                    Button:
+                        text: "Stop"
+                        font_size: 32
+                        bold: True
+                        background_color: (2, 0,0, 1)
 
 <SettingsPopup>
     size_hint: .75,.75
@@ -113,8 +132,6 @@
     AnchorLayout:
         GridLayout:
             rows: 10
-
-
             GridLayout:
                 cols:2
                 padding:0,10
@@ -122,7 +139,7 @@
                 Label:
                     text: "Capture Height:"
                 TextInput:
-                    id: "input"
+                    id: capture_height_input
                     multiline: False
 
             GridLayout:
@@ -131,7 +148,7 @@
                 Label:
                     text: "Capture Width:"
                 TextInput:
-                    id: "input"
+                    id: capture_width_input
                     multiline: False
 
             GridLayout:

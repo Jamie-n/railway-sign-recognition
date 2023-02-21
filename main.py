@@ -1,4 +1,4 @@
-import gui.GuiController as Gui
+import gui.interface_controller as interface_controller
 
 if __name__ == '__main__':
-    Gui.initialize()
+    interface_controller.initialize()

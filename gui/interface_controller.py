@@ -1,18 +1,12 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
-from kivy.uix.popup import Popup
+from gui.settings_controller import SettingsPopup
 
-
-class SettingsPopup(Popup):
-    def save_settings(self):
-        self.dismiss()
-
-
-class MyGridLayout(Widget):
+class InterfaceController(Widget):
 
     def open_settings(self):
-        SettingsPopup().open()
+        SettingsPopup().show_settings()
 
     def begin_detection(self):
         self.ids.stop_detection_button.disabled = False
@@ -23,12 +17,11 @@ class MyGridLayout(Widget):
         self.ids.stop_detection_button.disabled = True
         self.ids.current_limit_value.text = "00"
 
-
 class SpeedControllerApp(App):
     def build(self):
         Window.size = (1260, 720)
 
-        return MyGridLayout()
+        return InterfaceController()
 
 
 def initialize():
