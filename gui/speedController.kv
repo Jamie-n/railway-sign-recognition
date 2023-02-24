@@ -131,70 +131,99 @@
     title: "Settings"
 
     AnchorLayout:
-        GridLayout:
+        BoxLayout:
+            orientation: "vertical"
             id: settings_popup
-            rows: 7
-            Label:
-                size_hint_y: None
-                height:40
-                text: "Capture Height:"
-            TextInput:
-                size_hint_y: None
-                height:30
-                id: CAPTURE_HEIGHT
-                multiline: False
-
-            Label:
-                size_hint_y: None
-                height:40
-                text: "Capture Width:"
-            TextInput:
-                size_hint_y: None
-                height:30
-                id: CAPTURE_WIDTH
-                multiline: False
-
-            Label:
-                size_hint_y: None
-                height:40
-                text: "Capture Offset:"
-            TextInput:
-                size_hint_y: None
-                height:30
-                id: CAPTURE_OFFSET
-                multiline: False
-
-            Label:
-                size_hint_y: None
-                height:40
-                text: "Offset Direction:"
-            TextInput:
-                size_hint_y: None
-                height:30
-                id: CAPTURE_OFFSET_DIRECTION
-                multiline: False
-
-            Label:
-                size_hint_y: None
-                height:40
-                text: "DLL Path"
-            TextInput:
-                size_hint_y: None
-                height:30
-                id: DLL_PATH
-                multiline: False
 
             GridLayout:
                 cols:2
-                padding: 5
+                Label:
+                    size_hint_y: None
+                    height:40
+                    text: 'Capture Height:'
+                TextInput:
+                    size_hint_y: None
+                    height:30
+                    input_filter: 'float'
+                    id: CAPTURE_HEIGHT
+                    multiline: False
+            GridLayout:
+                cols:2
+                Label:
+                    size_hint_y: None
+                    height:40
+                    text: 'Capture Width:'
+                TextInput:
+                    size_hint_y: None
+                    height:30
+                    input_filter: 'float'
+                    id: CAPTURE_WIDTH
+                    multiline: False
+
+            GridLayout:
+                cols:2
+                Label:
+                    size_hint_y: None
+                    height:40
+                    text: 'Capture Device:'
+                TextInput:
+                    size_hint_y: None
+                    height:30
+                    id: CAPTURE_DEVICE
+                    multiline: False
+
+
+            GridLayout:
+                cols:2
+                Label:
+                    size_hint_y: None
+                    height:40
+                    text: 'Capture Offset:'
+                TextInput:
+                    size_hint_y: None
+                    height:30
+                    id: CAPTURE_OFFSET
+                    multiline: False
+
+            GridLayout:
+                cols:2
+                Label:
+                    size_hint_y: None
+                    height:40
+                    text: 'Offset Direction:'
+                TextInput:
+                    size_hint_y: None
+                    height:30
+                    id: CAPTURE_OFFSET_DIRECTION
+                    multiline: False
+
+            BoxLayout:
+                size_hint_y: None
+                height:30
+                Button:
+                    size_hint_y: None
+                    height:40
+                    text: 'Preview'
+                    on_press: root.dismiss()
+
+            GridLayout:
+                cols:2
+                Label:
+                    size_hint_y: None
+                    height:40
+                    text: 'DLL Path'
+                TextInput:
+                    size_hint_y: None
+                    height:30
+                    id: DLL_PATH
+                    multiline: False
+
+            GridLayout:
+                cols:2
+                Button:
+                    text: 'Cancel'
+                    on_press: root.dismiss()
 
                 Button:
-                    text: "Cancel"
-
-
-                    on_press: root.save_settings()
-
-                Button:
-                    text: "Save Settings"
-
+                    text: 'Save Settings'
                     on_press: root.save_settings()
