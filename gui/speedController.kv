@@ -204,7 +204,7 @@
                     size_hint_y: None
                     height:40
                     text: 'Preview'
-                    on_press: root.dismiss()
+                    on_press: root.preview_capture()
 
             GridLayout:
                 cols:2
@@ -227,3 +227,20 @@
                 Button:
                     text: 'Save Settings'
                     on_press: root.save_settings()
+
+<CapturePreviewPopup>
+    size_hint: .75,.75
+    auto_dismiss: False
+    title: "Image Preview"
+
+    AnchorLayout:
+        BoxLayout:
+
+
+            Image:
+                id: preview_image
+                size: root.width, root.height
+
+            Button:
+                text: 'Close'
+                on_press: root.dismiss()

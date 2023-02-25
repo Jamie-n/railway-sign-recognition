@@ -1,11 +1,11 @@
 from kivy.uix.popup import Popup
-
 import utils.settings as s
 import utils.utilities as utilities
 
+import gui.capture_preview_controller as capture_preview
+
 
 class SettingsPopup(Popup):
-
     settings_manager = s.Settings()
 
     def __init__(self, **kwargs):
@@ -25,3 +25,10 @@ class SettingsPopup(Popup):
 
         self.settings_manager.write_to_file()
         self.dismiss()
+
+    def preview_capture(self):
+        capture_preview.CapturePreviewPopup().show_preview(int(self.ids.CAPTURE_WIDTH.text), int(self.ids.CAPTURE_WIDTH.text))
+
+
+
+
