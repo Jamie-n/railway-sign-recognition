@@ -137,9 +137,9 @@
 
             GridLayout:
                 cols:2
+                size_hint_y: None
+                height:40
                 Label:
-                    size_hint_y: None
-                    height:40
                     text: 'Capture Height:'
                 TextInput:
                     size_hint_y: None
@@ -149,9 +149,9 @@
                     multiline: False
             GridLayout:
                 cols:2
+                size_hint_y: None
+                height:40
                 Label:
-                    size_hint_y: None
-                    height:40
                     text: 'Capture Width:'
                 TextInput:
                     size_hint_y: None
@@ -162,9 +162,10 @@
 
             GridLayout:
                 cols:2
+                size_hint_y: None
+                height:40
                 Label:
-                    size_hint_y: None
-                    height:40
+
                     text: 'Capture Device:'
                 TextInput:
                     size_hint_y: None
@@ -172,37 +173,12 @@
                     id: CAPTURE_DEVICE
                     multiline: False
 
-
-            GridLayout:
-                cols:2
-                Label:
-                    size_hint_y: None
-                    height:40
-                    text: 'Capture Offset:'
-                TextInput:
-                    size_hint_y: None
-                    height:30
-                    id: CAPTURE_OFFSET
-                    multiline: False
-
-            GridLayout:
-                cols:2
-                Label:
-                    size_hint_y: None
-                    height:40
-                    text: 'Offset Direction:'
-                TextInput:
-                    size_hint_y: None
-                    height:30
-                    id: CAPTURE_OFFSET_DIRECTION
-                    multiline: False
-
             BoxLayout:
                 size_hint_y: None
-                height:30
+                height:40
                 Button:
                     size_hint_y: None
-                    height:40
+                    height:30
                     text: 'Preview'
                     on_press: root.preview_capture()
 
@@ -220,6 +196,8 @@
 
             GridLayout:
                 cols:2
+                size_hint_y: None
+                height:40
                 Button:
                     text: 'Cancel'
                     on_press: root.dismiss()
@@ -231,16 +209,18 @@
 <CapturePreviewPopup>
     size_hint: .75,.75
     auto_dismiss: False
-    title: "Image Preview"
+    title: "Capture Preview"
 
     AnchorLayout:
-        BoxLayout:
-
+        GridLayout:
+            rows:2
 
             Image:
                 id: preview_image
                 size: root.width, root.height
 
             Button:
+                size_hint_y: None
+                height:30
                 text: 'Close'
                 on_press: root.dismiss()
