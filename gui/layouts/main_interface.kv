@@ -1,0 +1,140 @@
+
+<InterfaceController>
+    MDBoxLayout:
+        padding: 10
+        orientation: 'vertical'
+        size: root.width, root.height
+
+        MDGridLayout:
+            cols:3
+            height: 30
+            size_hint_y: None
+            spacing: 10
+
+            MDRaisedButton:
+                text: "Start Detection"
+                id: start_detection_button
+                height: 30
+                size_hint: 1,1
+                on_press: root.begin_detection()
+
+            MDRaisedButton:
+                text: "Stop Detection"
+                disabled: True
+                size_hint: 1,1
+                id: stop_detection_button
+                on_press: root.halt_detection()
+
+            MDRaisedButton:
+                size_hint: 1,1
+                text: "Application Settings"
+                on_press: root.open_settings()
+
+        GridLayout:
+            cols:2
+            size_hint_y: None
+            height: 150
+            padding: 30
+
+            MDLabel:
+                text: 'Current Speed'
+                bold: True
+                font_size: 32
+                halign: "center"
+
+            MDLabel:
+                text: 'Current Limit'
+                bold: True
+                font_size: 32
+                halign: "center"
+
+
+
+            MDLabel:
+                text: '00'
+                bold: True
+                font_size: 32
+                id: current_speed_value
+                halign: "center"
+
+
+
+            MDLabel:
+                text: '00'
+                bold: True
+                font_size: 32
+                id: current_limit_value
+                halign: "center"
+
+
+
+        GridLayout:
+            rows:2
+            GridLayout:
+                cols: 2
+
+                Image:
+
+
+                GridLayout:
+                    cols: 2
+                    MDSlider:
+                        id: throttle_slider
+                        min: 0
+                        max: 100
+                        step: 1
+                        orientation: 'vertical'
+                        value_track_color: (1, 0, 0, 1)
+                        value_track: True
+                        background_color: (1,0, 0, 1)
+
+                    MDSlider:
+                        id: brake_slider
+                        min: 0
+                        max: 100
+                        step: 1
+                        orientation: 'vertical'
+                        value_track_color: (1, 0, 0, 1)
+                        value_track: True
+
+                    MDLabel:
+                        size_hint_y: None
+                        height: 50
+                        line_height: 0
+                        text: "Throttle"
+                        bold: True
+                        font_size: 20
+                        halign: "center"
+
+                    MDLabel:
+                        size_hint_y: None
+                        height: 50
+                        line_height: 0
+                        text: "Brake"
+                        bold: True
+                        font_size: 20
+                        halign: "center"
+
+
+            GridLayout:
+                cols: 2
+                height: 40
+                size_hint_y: None
+                spacing: 10
+
+                MDRaisedButton:
+                    text: "Acknowledge"
+                    bold: True
+                    height: 40
+                    background_color: (0, 2, 0, 1)
+                    size_hint: 1,None
+
+                MDRaisedButton:
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    text: "Stop"
+                    height: 40
+                    bold: True
+                    background_color: (2, 0,0, 1)
+                    size_hint: 1,None
+
+
