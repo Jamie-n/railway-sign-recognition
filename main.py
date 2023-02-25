@@ -1,8 +1,4 @@
-from ultralytics import YOLO
+import gui.interface_controller as interface_controller
 
-model = YOLO("../pretrained/yolov8n.pt")
-
-results = model.train(data="dataset.yaml", epochs=50, cache="ram", pretrained=True)
-results = model.val()
-success = model.export(format="onnx")  # export the model to ONNX format
-
+if __name__ == '__main__':
+    interface_controller.initialize()

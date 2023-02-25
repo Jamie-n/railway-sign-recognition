@@ -5,8 +5,6 @@ import cv2
 
 model = YOLO("best.pt")
 
-img = cv2.imread('test.jpg')
-
 
 def detect(image):
     return model(image)
