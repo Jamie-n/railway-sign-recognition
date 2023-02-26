@@ -4,6 +4,7 @@ from kivy.uix.widget import Widget
 from gui.settings_controller import SettingsMenuContent
 from kivy.core.window import Window
 
+
 class InterfaceController(Widget):
 
     def open_settings(self):
@@ -25,8 +26,6 @@ class SpeedControllerApp(MDApp):
 
         Builder.load_file('gui/layouts/main_interface.kv')
         Builder.load_file('gui/layouts/settings_menu.kv')
-        Builder.load_file('gui/layouts/capture_preview.kv')
-
 
         return InterfaceController()
 

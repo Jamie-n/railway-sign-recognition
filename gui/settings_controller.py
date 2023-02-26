@@ -8,8 +8,6 @@ import utils.constants as constants
 
 
 class CapturePreview(BoxLayout):
-    def close(self):
-        print(self)
     pass
 
 
