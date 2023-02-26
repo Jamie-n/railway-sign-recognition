@@ -20,7 +20,6 @@ class Settings:
 
     def set_setting_value(self, key: str, value: str):
         self.settings_dictionary[key] = value
-        print(self.settings_dictionary)
 
     def write_to_file(self):
         print(self.settings_dictionary)
