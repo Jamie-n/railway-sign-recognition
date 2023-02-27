@@ -2,7 +2,7 @@ from enum import Enum
 import mss
 import numpy
 import cv2
-import utils.settings as settings
+import utils.settings_helper as settings
 import utils.constants as constants
 
 

@@ -1,4 +1,4 @@
-import utils.settings as s
+import utils.settings_helper as s
 
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
