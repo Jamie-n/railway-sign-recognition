@@ -1,15 +1,22 @@
+from datetime import datetime
+
+import cv2
 import threading
 import time
 from threading import Event
 
-from kivy.clock import mainthread
+from kivy.properties import partial
+
+import detection_system.screen_capture as screen_capture
+from detection_system.screen_capture import ScreenCapture
+from kivy.clock import mainthread, Clock
 from kivymd.app import MDApp
 from kivy.base import Builder
 from kivy.uix.widget import Widget
 from gui.settings_controller import SettingsMenuContent
 from kivy.core.window import Window
 import utils.helpers as helpers
-
+from detection_system.detection_and_identification_system import DetectionSystem
 
 class InterfaceController(Widget):
     event = Event()
@@ -27,7 +34,7 @@ class InterfaceController(Widget):
         self.ids.stop_detection_button.disabled = False
         self.ids.start_detection_button.disabled = True
 
-        self.thread = threading.Thread(target=self.run_speed_detection, args=(self.event,))
+        self.thread = threading.Thread(target=self.run_speed_detection, args=(self.event,), daemon=True)
 
         self.thread.start()
 
@@ -43,14 +50,24 @@ class InterfaceController(Widget):
         self.event.clear()
 
     def run_speed_detection(self, event):
-        for i in range(0, 100):
-            time.sleep(0.1)
-            self.set_current_speed(i)
-            self.set_current_limit(i)
-            self.set_current_throttle(i)
-            self.set_current_brake(i)
-            if event.is_set():
-                break
+
+        detector = DetectionSystem()
+
+        while not event.is_set():
+            start_time = time.time()
+
+            image = ScreenCapture.load_from_settings().capture_frame()
+
+            image = detector.process_frame(image)
+
+            preview_image = self.ids.preview_image
+            resized_image = cv2.resize(image, dsize=(int(preview_image.width), int(preview_image.height)), interpolation=cv2.INTER_AREA)
+
+
+            Clock.schedule_once(partial(self.set_current_image, resized_image))
+
+            print("FPS: ", 1.0 / (time.time() - start_time))
+
 
     def set_current_speed(self, value):
         self.current_speed = value
@@ -69,6 +86,11 @@ class InterfaceController(Widget):
     def set_current_brake(self, value):
         self.current_brake = value
         self.ids.brake_slider.value_normalized = value * 0.01
+
+    @mainthread
+    def set_current_image(self, value, dt):
+        texture = screen_capture.convert_to_texture(value)
+        self.ids.preview_image.texture = texture
 
 
 class SpeedControllerApp(MDApp):

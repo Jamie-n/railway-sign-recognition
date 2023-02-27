@@ -1,21 +1,17 @@
-from enum import Enum
 import mss
 import numpy
 import cv2
+from kivy.clock import mainthread
+from numpy import array
 import utils.settings as settings
 import utils.constants as constants
-
-
-class ScreenCaptureDirection(Enum):
-    LEFT = 'left'
-    RIGHT = 'right'
+from kivy.graphics.texture import Texture
 
 
 class ScreenCapture:
     capture_height = int
     capture_width = int
     capture_offset = int
-    capture_direction = ScreenCaptureDirection
 
     def __init__(self, capture_height, capture_width):
         self.capture_height = capture_height
@@ -36,3 +32,15 @@ class ScreenCapture:
         with mss.mss() as sct:
             monitor = {"top": 0, "left": 0, "width": int(self.capture_width), "height": int(self.capture_height)}
             return numpy.array(sct.grab(monitor))
+
+
+
+def convert_to_texture(image_array):
+    image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
+    image_array = cv2.flip(image_array, 0)
+
+    w, h, _ = image_array.shape
+    texture = Texture.create(size=(h, w))
+    texture.blit_buffer(image_array.flatten(), colorfmt='rgb', bufferfmt='ubyte')
+
+    return texture
