@@ -3,7 +3,7 @@
     orientation: "vertical"
     spacing: "12dp"
     size_hint_y: None
-    height: "350"
+    height: "450"
 
 
     MDTextField:
@@ -32,6 +32,13 @@
         text: "Browse"
         size: root.width, 30
         on_release: root.preview_capture()
+
+    MDGridLayout:
+        cols: 2
+        MDLabel:
+            text: "Debug Mode"
+        MDSwitch:
+            id: IS_DEBUG
 
 
 <CapturePreview>

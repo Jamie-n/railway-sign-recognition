@@ -5,6 +5,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import BoxLayout
 import detection_system.screen_capture as capture
 import utils.constants as constants
+import kivymd.uix.selectioncontrol.selectioncontrol as MDSwitch
 
 
 class CapturePreview(BoxLayout):
@@ -39,6 +40,8 @@ class SettingsMenuContent(BoxLayout):
             element = self.dialog.content_cls.ids[ident]
             element.text = self.settings_manager.get_setting_value(ident)
 
+        self.dialog.content_cls.ids.IS_DEBUG.active = self.settings_manager.get_setting_value('IS_DEBUG')
+
         self.dialog.open()
 
     def hide_settings(self, *args):
@@ -51,6 +54,8 @@ class SettingsMenuContent(BoxLayout):
         for ident in self.dialog.content_cls.ids:
             element = self.dialog.content_cls.ids[ident]
             self.settings_manager.set_setting_value(ident, element.text)
+
+        self.settings_manager.set_setting_value('IS_DEBUG', self.dialog.content_cls.ids.IS_DEBUG.active)
 
         self.settings_manager.write_to_file()
         self.hide_settings()
@@ -71,12 +76,11 @@ class SettingsMenuContent(BoxLayout):
 
         self.preview_dialog.open()
 
-        screen_capture = capture.ScreenCapture(capture_width=int(self.ids.CAPTURE_WIDTH.text), capture_height=int(self.ids.CAPTURE_HEIGHT.text))
+        screen_capture = capture.ScreenCapture(capture_width=int(self.ids.CAPTURE_WIDTH.text),
+                                               capture_height=int(self.ids.CAPTURE_HEIGHT.text))
         screen_capture.capture_preview_frame()
 
         preview_img = self.preview_dialog.content_cls.ids.preview_image
 
         preview_img.source = constants.CAPTURE_PREVIEW_PATH
         preview_img.reload()
-
-

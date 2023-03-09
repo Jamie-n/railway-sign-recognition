@@ -16,7 +16,7 @@ from kivy.uix.widget import Widget
 from gui.settings_controller import SettingsMenuContent
 from kivy.core.window import Window
 import utils.helpers as helpers
-from detection_system.detection_and_identification_system import DetectionSystem
+from detection_system.detection_and_identification_system import DetectionSystem, IdentificationSystem
 
 class InterfaceController(Widget):
     event = Event()
@@ -26,6 +26,8 @@ class InterfaceController(Widget):
     current_limit = 00
     current_throttle = 00
     current_brake = 00
+
+    frames_since_detection = 0
 
     def open_settings(self):
         SettingsMenuContent().show_settings()
@@ -58,13 +60,17 @@ class InterfaceController(Widget):
 
             image = ScreenCapture.load_from_settings().capture_frame()
 
-            image = detector.process_frame(image)
+            detection = detector.process_frame(image)
+
+            image = detection.get_image()
+
+            speed = IdentificationSystem().process_frame(detection)
 
             preview_image = self.ids.preview_image
             resized_image = cv2.resize(image, dsize=(int(preview_image.width), int(preview_image.height)), interpolation=cv2.INTER_AREA)
 
-
             Clock.schedule_once(partial(self.set_current_image, resized_image))
+            self.set_current_speed(speed)
 
             print("FPS: ", 1.0 / (time.time() - start_time))
 
