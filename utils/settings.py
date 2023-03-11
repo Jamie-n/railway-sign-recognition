@@ -22,6 +22,5 @@ class Settings:
         self.settings_dictionary[key] = value
 
     def write_to_file(self):
-        print(self.settings_dictionary)
         with open(constants.SETTINGS_PATH, "w") as settings_file:
             json.dump(self.settings_dictionary, settings_file)
