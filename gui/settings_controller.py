@@ -1,3 +1,5 @@
+import cv2
+
 import utils.settings as s
 
 from kivymd.uix.button import MDFlatButton
@@ -6,6 +8,7 @@ from kivymd.uix.boxlayout import BoxLayout
 import detection_system.screen_capture as capture
 import utils.constants as constants
 import kivymd.uix.selectioncontrol.selectioncontrol as MDSwitch
+import utils.helpers as helpers
 
 
 class CapturePreview(BoxLayout):
@@ -76,11 +79,9 @@ class SettingsMenuContent(BoxLayout):
 
         self.preview_dialog.open()
 
-        screen_capture = capture.ScreenCapture(capture_width=int(self.ids.CAPTURE_WIDTH.text),
-                                               capture_height=int(self.ids.CAPTURE_HEIGHT.text))
-        screen_capture.capture_preview_frame()
+        screen_capture = capture.ScreenCapture(capture_width=int(self.ids.CAPTURE_WIDTH.text), capture_height=int(self.ids.CAPTURE_HEIGHT.text))
 
-        preview_img = self.preview_dialog.content_cls.ids.preview_image
+        preview_window = self.preview_dialog.content_cls.ids.preview_image
 
-        preview_img.source = constants.CAPTURE_PREVIEW_PATH
-        preview_img.reload()
+        helpers.PreviewImageHandler(screen_capture.capture_frame(), preview_window).resize_for_preview().update_texture()
+

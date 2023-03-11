@@ -1,9 +1,44 @@
-import numpy
 import pytesseract as pytesseract
 from ultralytics import YOLO
 import cv2
 import utils.constants as constants
 from detection_system.image_detection import ImageDetection
+from detection_system.screen_capture import ScreenCapture
+
+
+class DetectionHandler:
+    current_frame = []
+    current_limit = None
+
+    detector = None
+    screen_capture = None
+    digit_ident = None
+
+    def __init__(self):
+        self.detector = DetectionSystem()
+        self.screen_capture = ScreenCapture.load_from_settings()
+        self.digit_ident = IdentificationSystem()
+
+    def run_detection(self):
+
+        image = self.screen_capture.capture_frame()
+        detection = self.detector.process_frame(image)
+        self.current_frame = detection.get_image()
+
+        # If the detection subnet has detected a speed sign, calculate the speed stated, if a speed was detected within the expected values inform the interface to update
+        if detection.has_detections():
+            speed = self.digit_ident.process_frame(detection)
+
+            if speed is not None:
+                self.current_limit = speed
+
+                return True
+
+    def get_preview_image(self):
+        return self.current_frame
+
+    def get_current_limit(self):
+        return self.current_limit
 
 
 class FrameProcessor:
@@ -42,18 +77,20 @@ class IdentificationSystem(FrameProcessor):
 
         first_detection = detections.get_detections()
 
-        if len(detections.get_detections()) == 0:
-            return
-
         first_detection = first_detection[0]
         frame = frame[first_detection.y1:first_detection.y2, first_detection.x1:first_detection.x2]
 
         detected_speed = pytesseract.image_to_string(ImageFilter(frame).filter_image(), config='--psm 9 -c tessedit_char_whitelist=0123456789')
 
-        if detected_speed is None:
-            return 00
+        return self.filter_detected_speed(detected_speed)
 
-        return detected_speed
+    @staticmethod
+    def filter_detected_speed(detected_speed):
+        try:
+            if int(detected_speed) in constants.ACCEPTED_SPEED_VALUES:
+                return detected_speed
+        except:
+            return None
 
 
 class ImageFilter:
@@ -61,7 +98,6 @@ class ImageFilter:
 
     def __init__(self, image):
         self.image = image
-
 
     def filter_image(self):
         return cv2.resize(self.image, (300, 300), cv2.INTER_AREA)
