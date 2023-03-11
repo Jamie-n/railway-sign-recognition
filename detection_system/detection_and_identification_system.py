@@ -20,9 +20,7 @@ class DetectionHandler:
         self.digit_ident = IdentificationSystem()
 
     def run_detection(self):
-
-        image = self.screen_capture.capture_frame()
-        detection = self.detector.process_frame(image)
+        detection = self.detector.process_frame(self.screen_capture.capture_frame())
         self.current_frame = detection.get_image()
 
         # If the detection subnet has detected a speed sign, calculate the speed stated, if a speed was detected within the expected values inform the interface to update
@@ -33,6 +31,8 @@ class DetectionHandler:
                 self.current_limit = speed
 
                 return True
+
+        return False
 
     def get_preview_image(self):
         return self.current_frame

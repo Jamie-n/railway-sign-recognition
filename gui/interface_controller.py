@@ -27,8 +27,7 @@ class InterfaceController(Widget):
         self.ids.stop_detection_button.disabled = False
         self.ids.start_detection_button.disabled = True
 
-        detection_handler = DetectionHandler()
-        self.thread = threading.Thread(target=self.run_speed_detection, args=(self.event, detection_handler,), daemon=True)
+        self.thread = threading.Thread(target=self.run_speed_detection, args=(self.event,), daemon=True)
 
         self.thread.start()
 
@@ -42,7 +41,9 @@ class InterfaceController(Widget):
 
         self.event.clear()
 
-    def run_speed_detection(self, event, detection_handler):
+    def run_speed_detection(self, event):
+
+        detection_handler = DetectionHandler()
 
         while not event.is_set():
             result = detection_handler.run_detection()
