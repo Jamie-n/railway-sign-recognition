@@ -9,6 +9,7 @@ from gui.settings_controller import SettingsMenuContent
 from kivy.core.window import Window
 import utils.helpers as helpers
 from detection_system.detection_and_identification_system import DetectionHandler
+from control_system.locomotive_controller import LocomotiveController
 
 
 class InterfaceController(Widget):
@@ -55,7 +56,7 @@ class InterfaceController(Widget):
 
     def set_current_speed(self, value):
         self.current_speed = value
-        self.ids.current_speed_value.text = helpers.pad_digits(str(value))
+        self.ids.current_speed_value.text = str(value)
 
     def set_current_limit(self, value):
         self.current_limit = value
@@ -63,6 +64,9 @@ class InterfaceController(Widget):
 
     @mainthread
     def set_current_throttle(self, value):
+        if value is None or value < 0:
+            return
+
         self.current_throttle = value
         self.ids.throttle_slider.value_normalized = value * 0.01
 
@@ -74,6 +78,20 @@ class InterfaceController(Widget):
     @mainthread
     def set_current_image(self, image, dt):
         helpers.PreviewImageHandler(image, self.ids.preview_image).resize_for_preview().update_texture()
+
+    def update_current_throttle(self):
+        throttle = LocomotiveController(None).calculate_throttle(int(self.current_limit), int(self.current_speed))
+        if throttle < 0:
+            throttle = 0
+        self.set_current_throttle(throttle)
+
+    def update_current_brake(self):
+        value = self.ids.brake_slider.value_normalized * 100
+
+        print(value)
+
+        self.set_current_speed(int(value))
+        self.update_current_throttle()
 
 
 class SpeedControllerApp(MDApp):
