@@ -1,9 +1,6 @@
 import cv2
 from kivy.graphics.texture import Texture
 
-def pad_digits(value=str):
-    return value.zfill(2)
-
 class ImageHelpers:
     @staticmethod
     def image_to_texture(image):

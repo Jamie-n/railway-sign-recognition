@@ -59,7 +59,7 @@ class InterfaceController(Widget):
 
     def set_current_limit(self, value):
         self.current_limit = value
-        self.ids.current_limit_value.text = str(helpers.pad_digits(str(value)))
+        self.ids.current_limit_value.text = str(value)
 
     @mainthread
     def set_current_throttle(self, value):
