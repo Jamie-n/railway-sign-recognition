@@ -8,7 +8,7 @@ from detection_system.screen_capture import ScreenCapture
 
 class DetectionHandler:
     current_frame = []
-    current_limit = None
+    current_limit = 0
 
     detector = None
     screen_capture = None
@@ -19,7 +19,7 @@ class DetectionHandler:
         self.screen_capture = ScreenCapture.load_from_settings()
         self.digit_ident = IdentificationSystem()
 
-    def run_detection(self):
+    def run(self):
         detection = self.detector.process_frame(self.screen_capture.capture_frame())
         self.current_frame = detection.get_image()
 
