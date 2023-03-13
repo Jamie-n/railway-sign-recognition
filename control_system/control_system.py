@@ -97,7 +97,8 @@ class TrainSimClassicAdapter:
 
     def check_connection(self) -> bool | SimulatorConnectionException:
         if not self.connected:
-            raise SimulatorConnectionException
+            #raise SimulatorConnectionException
+            pass
 
         return True
 

@@ -4,9 +4,10 @@ import cv2
 import utils.constants as constants
 from detection_system.image_detection import ImageDetection
 from detection_system.screen_capture import ScreenCapture
+from interfaces import Publisher, NotificationType
 
 
-class DetectionHandler:
+class DetectionHandler(Publisher):
     current_frame = []
     current_limit = 0
 
@@ -19,20 +20,22 @@ class DetectionHandler:
         self.screen_capture = ScreenCapture.load_from_settings()
         self.digit_ident = IdentificationSystem()
 
-    def run(self):
-        detection = self.detector.process_frame(self.screen_capture.capture_frame())
-        self.current_frame = detection.get_image()
+    def run(self, event):
+        while not event.isSet():
+            print(self.subscribers)
+            detection = self.detector.process_frame(self.screen_capture.capture_frame())
+            self.current_frame = detection.get_image()
 
-        # If the detection subnet has detected a speed sign, calculate the speed stated, if a speed was detected within the expected values inform the interface to update
-        if detection.has_detections():
-            speed = self.digit_ident.process_frame(detection)
+            self.emit(NotificationType.PREVIEW_IMAGE, self.current_frame)
 
-            if speed is not None:
-                self.current_limit = speed
+            # If the detection subnet has detected a speed sign, calculate the speed stated, if a speed was detected within the expected values inform the interface to update
+            if detection.has_detections():
+                speed = self.digit_ident.process_frame(detection)
 
-                return True
+                if speed is not None:
+                    self.current_limit = speed
 
-        return False
+                    self.emit(NotificationType.SPEED_LIMIT, speed)
 
     def get_preview_image(self):
         return self.current_frame
@@ -46,7 +49,7 @@ class FrameProcessor:
         pass
 
 
-class DetectionSystem(FrameProcessor):
+class DetectionSystem(FrameProcessor, Publisher):
     model = YOLO
 
     def __init__(self):
