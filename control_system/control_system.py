@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from enum import Enum
-import utils.settings_helper as settings_helper
+from utils.settings_helper import Settings
 import ctypes
 from control_system.exceptions.control_exceptions import ControlOptionsNotLoadedException, SimulatorConnectionException
 
@@ -74,7 +74,7 @@ class TrainSimClassicAdapter:
     control_options = []
 
     def __init__(self):
-        dll_path = settings_helper.Settings().get_setting_value('DLL_PATH')
+        dll_path = Settings().get_setting_value('DLL_PATH')
         self.dll = ctypes.cdll.LoadLibrary(dll_path)
 
         self.dll.GetControllerList.restype = ctypes.c_char_p
@@ -97,7 +97,7 @@ class TrainSimClassicAdapter:
 
     def check_connection(self) -> bool | SimulatorConnectionException:
         if not self.connected:
-            #raise SimulatorConnectionException
+            # raise SimulatorConnectionException
             pass
 
         return True
@@ -129,6 +129,8 @@ class TrainSimClassicAdapter:
         if control_index:
             self.dll.SetControllerValue(control_index, ctypes.c_float(value))
 
+        raise Exception()
+
     def get_control_value(self, control_option: ControlValues):
         control_index = self.control_option_to_index(str(control_option.value))
 
@@ -138,6 +140,7 @@ class TrainSimClassicAdapter:
         return False
 
     """Sound the horn of the current locomotive"""
+
     def sound_horn(self, value: int) -> None:
         self.set_control_value(ControlValues.HORN, True)
         time.sleep(0.5)
@@ -151,3 +154,9 @@ class TrainSimClassicAdapter:
 
     def set_brake(self, value: float):
         self.set_control_value(ControlValues.TRAIN_BRAKE_CONTROL, value)
+
+    def get_brake(self):
+        return self.get_control_value(ControlValues.TRAIN_BRAKE_CONTROL)
+
+    def get_throttle(self):
+        return self.get_control_value(ControlValues.REGULATOR)
