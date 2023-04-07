@@ -1,78 +1,83 @@
-import threading
-from threading import Event
+import time
 from kivy.properties import partial
 from kivy.clock import mainthread, Clock
 from kivymd.app import MDApp
 from kivy.base import Builder
 from kivy.uix.widget import Widget
+from interfaces import NotificationType, Subscriber
+from application_core import SystemCore
 from gui.settings_controller import SettingsMenuContent
 from kivy.core.window import Window
 import utils.helpers as helpers
 from detection_system.detection_and_identification_system import DetectionHandler
+from control_system.locomotive_controller import LocomotiveControlCore
+from control_system.control_system import TrainSimClassicAdapter
 
 
-class InterfaceController(Widget):
-    event = Event()
-    thread = None
+class InterfaceController(Widget, Subscriber):
+    application_core: SystemCore = None
 
-    current_speed = 00
-    current_limit = 00
-    current_throttle = 00
-    current_brake = 00
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        sim_connector = TrainSimClassicAdapter()
+        control_core = LocomotiveControlCore(sim_connector)
+        control_core.register(self)
+
+        detection_handler = DetectionHandler()
+        detection_handler.register(self, control_core)
+
+        self.application_core = SystemCore(control_core, detection_handler)
+
+    def notify(self, event_type: NotificationType, value):
+        if event_type == NotificationType.THROTTLE_POSITION:
+            Clock.schedule_once(partial(self.set_current_throttle, value))
+        elif event_type == NotificationType.BRAKE_POSITION:
+            Clock.schedule_once(partial(self.set_current_brake, value))
+        elif event_type == NotificationType.SPEED_LIMIT:
+            Clock.schedule_once(partial(self.set_current_limit, value))
+        elif event_type == NotificationType.SPEED_MPH:
+            Clock.schedule_once(partial(self.set_current_speed, round(value, 1)))
+        elif event_type == NotificationType.PREVIEW_IMAGE:
+            Clock.schedule_once(partial(self.set_current_image, value))
 
     def open_settings(self):
         SettingsMenuContent().show_settings()
 
     def begin_detection(self):
-        self.ids.stop_detection_button.disabled = False
-        self.ids.start_detection_button.disabled = True
+        self.set_stop_detection_button_enabled(True)
+        self.set_start_detection_button_enabled(False)
 
-        self.thread = threading.Thread(target=self.run_speed_detection, args=(self.event,), daemon=True)
-
-        self.thread.start()
+        self.application_core.startup()
 
     def halt_detection(self):
-        self.ids.start_detection_button.disabled = False
-        self.ids.stop_detection_button.disabled = True
+        self.set_stop_detection_button_enabled(False)
+        self.set_start_detection_button_enabled(True)
 
-        self.event.set()
+        self.application_core.shutdown()
 
-        self.thread.join()
+    def set_start_detection_button_enabled(self, enabled_disabled: bool) -> None:
+        self.ids.start_detection_button.disabled = not enabled_disabled
 
-        self.event.clear()
+    def set_stop_detection_button_enabled(self, enabled_disabled: bool) -> None:
+        self.ids.stop_detection_button.disabled = not enabled_disabled
 
-    def run_speed_detection(self, event):
+    def set_current_speed(self, value, dt=None):
+        self.ids.current_speed_value.text = str(value)
 
-        detection_handler = DetectionHandler()
-
-        while not event.is_set():
-            result = detection_handler.run_detection()
-
-            if result:
-                self.set_current_limit(detection_handler.get_current_limit())
-
-            Clock.schedule_once(partial(self.set_current_image, detection_handler.get_preview_image()))
-
-    def set_current_speed(self, value):
-        self.current_speed = value
-        self.ids.current_speed_value.text = helpers.pad_digits(str(value))
-
-    def set_current_limit(self, value):
-        self.current_limit = value
+    def set_current_limit(self, value, t=None):
         self.ids.current_limit_value.text = str(value)
 
     @mainthread
-    def set_current_throttle(self, value):
-        self.current_throttle = value
-        self.ids.throttle_slider.value_normalized = value * 0.01
+    def set_current_throttle(self, value: float, t):
+        self.ids.throttle_slider.value_normalized = value
 
     @mainthread
-    def set_current_brake(self, value):
-        self.current_brake = value
-        self.ids.brake_slider.value_normalized = value * 0.01
+    def set_current_brake(self, value, t):
+        self.ids.brake_slider.value_normalized = value
 
     @mainthread
-    def set_current_image(self, image, dt):
+    def set_current_image(self, image, t):
         helpers.PreviewImageHandler(image, self.ids.preview_image).resize_for_preview().update_texture()
 
 

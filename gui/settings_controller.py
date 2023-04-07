@@ -1,14 +1,9 @@
-import cv2
-
-import utils.settings as s
-
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import BoxLayout
 import detection_system.screen_capture as capture
-import utils.constants as constants
-import kivymd.uix.selectioncontrol.selectioncontrol as MDSwitch
 import utils.helpers as helpers
+import utils.settings_helper as settings
 
 
 class CapturePreview(BoxLayout):
@@ -16,7 +11,7 @@ class CapturePreview(BoxLayout):
 
 
 class SettingsMenuContent(BoxLayout):
-    settings_manager = s.Settings()
+    settings_manager = settings.Settings()
     dialog = None
     preview_dialog = None
 

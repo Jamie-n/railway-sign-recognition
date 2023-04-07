@@ -1,5 +1,8 @@
+import time
+
 import cv2
 from kivy.graphics.texture import Texture
+
 
 class ImageHelpers:
     @staticmethod
@@ -39,3 +42,29 @@ class PreviewImageHandler:
 
     def image_to_texture(self):
         return ImageHelpers.image_to_texture(self.image_for_preview)
+
+
+class PID:
+    GAIN = 5.5
+    CYCLE_TIME = 0.01
+    previous_error = 0.0
+
+    def __init__(self):
+        pass
+
+    def __call__(self, set_point: int, process_value: int) -> float:
+        error = set_point - process_value
+
+        proportional = self.GAIN * error
+
+        integral = self.GAIN * error * self.CYCLE_TIME
+
+        derivative = self.GAIN * 0 / self.CYCLE_TIME
+
+        self.previous_error = error
+
+        # time.sleep(self.CYCLE_TIME)
+
+        val = proportional + integral + derivative
+
+        return val
