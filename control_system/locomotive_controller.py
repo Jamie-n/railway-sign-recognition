@@ -25,24 +25,27 @@ class LocomotiveControlCore(Thread, Publisher, Subscriber):
 
     def run(self, event) -> None:
         while not event.isSet():
-            self.emit(NotificationType.SPEED_MPH, self.get_speed())
-
-            speed = self.speed_limit - self.get_speed()
-
-            if speed > 0:
-                self.set_brake(0)
-                self.set_throttle(self.calculate_control_value())
-            else:
-                self.set_throttle(0)
-                self.set_brake(abs(self.calculate_control_value()))
-
+            self.manage_speed()
             time.sleep(0.1)
+
+    def manage_speed(self):
+        self.emit(NotificationType.SPEED_MPH, self.get_speed())
+
+        if self.speed_difference() > 0:
+            self.set_brake(0)
+            self.set_throttle(self.calculate_control_value())
+        else:
+            self.set_throttle(0)
+            self.set_brake(abs(self.calculate_control_value()))
+
+    def speed_difference(self):
+        return self.speed_limit - self.get_speed()
 
     def get_speed(self):
         return self.locomotive_controller.get_speed()
 
     def connect(self):
-        self.locomotive_controller.connect()
+        return self.locomotive_controller.connect()
 
     def disconnect(self):
         self.locomotive_controller.disconnect()
@@ -53,7 +56,6 @@ class LocomotiveControlCore(Thread, Publisher, Subscriber):
         self.emit(NotificationType.THROTTLE_POSITION, value)
 
     def set_brake(self, value):
-        print(value)
         self.brake_position = value
         self.locomotive_controller.set_brake(value)
         self.emit(NotificationType.BRAKE_POSITION, value)
