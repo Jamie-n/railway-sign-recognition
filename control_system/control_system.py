@@ -95,10 +95,9 @@ class TrainSimClassicAdapter:
     Test the application is connected to the simulator before attempting to operate upon the dll 
     """
 
-    def check_connection(self) -> bool | SimulatorConnectionException:
+    def check_connection(self):
         if not self.connected:
-            # raise SimulatorConnectionException
-            pass
+            raise SimulatorConnectionException
 
         return True
 
@@ -111,7 +110,6 @@ class TrainSimClassicAdapter:
 
     def load_control_options(self):
         self.check_connection()
-
         self.control_options = self.get_control_options()
 
     def control_option_to_index(self, option_name: str):
@@ -129,22 +127,13 @@ class TrainSimClassicAdapter:
         if control_index:
             self.dll.SetControllerValue(control_index, ctypes.c_float(value))
 
-        raise Exception()
-
     def get_control_value(self, control_option: ControlValues):
         control_index = self.control_option_to_index(str(control_option.value))
 
-        if control_index:
-            return self.dll.GetControllerValue(control_index, 0)
+        return self.dll.GetControllerValue(control_index, 0)
 
-        return False
-
-    """Sound the horn of the current locomotive"""
-
-    def sound_horn(self, value: int) -> None:
-        self.set_control_value(ControlValues.HORN, True)
-        time.sleep(0.5)
-        self.set_control_value(ControlValues.HORN, False)
+    def sound_horn(self, value: bool) -> None:
+        self.set_control_value(ControlValues.HORN, value)
 
     def get_speed(self) -> float:
         return self.get_control_value(ControlValues.SPEEDOMETER_MPH)
