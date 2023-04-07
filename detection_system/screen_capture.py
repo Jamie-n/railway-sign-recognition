@@ -5,17 +5,9 @@ import cv2
 import utils.settings_helper as settings
 import utils.constants as constants
 
-
-class ScreenCaptureDirection(Enum):
-    LEFT = 'left'
-    RIGHT = 'right'
-
-
 class ScreenCapture:
     capture_height = int
     capture_width = int
-    capture_offset = int
-    capture_direction = ScreenCaptureDirection
 
     def __init__(self, capture_height, capture_width):
         self.capture_height = capture_height
