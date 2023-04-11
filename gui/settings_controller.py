@@ -1,5 +1,6 @@
 from typing import Union
 
+from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError, VerificationError
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
@@ -7,7 +8,7 @@ from kivymd.uix.boxlayout import BoxLayout
 import detection_system.screen_capture as capture
 import utils.helpers as helpers
 from utils.settings_helper import Settings
-import argon2
+from argon2 import PasswordHasher
 
 
 class CapturePreview(BoxLayout):
@@ -64,10 +65,8 @@ class SettingsMenuContent(BoxLayout):
         self.password_dialog.content_cls.ids.PASSWORD.error = True
         passcode = self.password_dialog.content_cls.ids.PASSWORD.text
 
-        hashed = argon2.hash_password(bytes(passcode, 'utf-8'))
-
         try:
-            if argon2.verify_password(hashed, bytes(self.settings_manager.get_setting_value('PASSCODE'), 'utf-8')):
+            if PasswordHasher().verify(self.settings_manager.get_setting_value('PASSCODE'), passcode):
                 return True
         except VerifyMismatchError:
             return False
