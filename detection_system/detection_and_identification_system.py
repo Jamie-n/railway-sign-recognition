@@ -22,7 +22,6 @@ class DetectionHandler(Publisher):
 
     def run(self, event):
         while not event.isSet():
-            print(self.subscribers)
             detection = self.detector.process_frame(self.screen_capture.capture_frame())
             self.current_frame = detection.get_image()
 
