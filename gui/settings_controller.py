@@ -48,7 +48,7 @@ class SettingsMenuContent(BoxLayout):
             element = self.dialog.content_cls.ids[ident]
             element.text = self.settings_manager.get_setting_value(ident)
 
-        self.dialog.content_cls.ids.IS_DEBUG.active = self.settings_manager.get_setting_value('IS_DEBUG')
+        self.dialog.content_cls.ids.IS_DEBUG.active = self.settings_manager.is_debug()
 
         self.dialog.open()
 
@@ -66,13 +66,13 @@ class SettingsMenuContent(BoxLayout):
         passcode = self.password_dialog.content_cls.ids.PASSWORD.text
 
         try:
-            if PasswordHasher().verify(self.settings_manager.get_setting_value('PASSCODE'), passcode):
+            if PasswordHasher().verify(self.settings_manager.get_password(), passcode):
                 return True
         except VerifyMismatchError:
             return False
 
     def validate_password(self, *args):
-        if self.is_password_valid() or self.settings_manager.get_setting_value('IS_DEBUG'):
+        if self.is_password_valid() or self.settings_manager.is_debug():
             self.hide_password_dialog()
             self.show_settings()
 

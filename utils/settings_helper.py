@@ -18,9 +18,15 @@ class Settings:
 
         return self.settings_dictionary[key]
 
-    def set_setting_value(self, key: str, value: str):
+    def set_setting_value(self, key: str, value: str) -> None:
         self.settings_dictionary[key] = value
 
-    def write_to_file(self):
+    def write_to_file(self) -> None:
         with open(constants.SETTINGS_PATH, "w") as settings_file:
             json.dump(self.settings_dictionary, settings_file)
+
+    def get_password(self) -> str:
+        return self.get_setting_value('PASSCODE')
+
+    def is_debug(self) -> bool:
+        return self.get_setting_value('IS_DEBUG')
