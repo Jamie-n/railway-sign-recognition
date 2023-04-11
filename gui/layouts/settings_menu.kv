@@ -40,6 +40,26 @@
         MDSwitch:
             id: IS_DEBUG
 
+<PasswordDialog>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "100"
+    width: "200"
+    orientation: "vertical"
+
+    MDAnchorLayout:
+        MDGridLayout:
+            rows:1
+            MDTextField:
+                id: PASSWORD
+                hint_text: "Passcode"
+                helper_text: "Invalid Passcode"
+                helper_text_mode: "on_error"
+                password: True
+
+
+
 
 <CapturePreview>
     orientation: "vertical"

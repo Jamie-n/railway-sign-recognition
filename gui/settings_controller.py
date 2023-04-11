@@ -1,19 +1,28 @@
+from typing import Union
+
+from argon2.exceptions import VerifyMismatchError, VerificationError
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import BoxLayout
 import detection_system.screen_capture as capture
 import utils.helpers as helpers
-import utils.settings_helper as settings
+from utils.settings_helper import Settings
+import argon2
 
 
 class CapturePreview(BoxLayout):
     pass
 
 
+class PasswordDialog(BoxLayout):
+    pass
+
+
 class SettingsMenuContent(BoxLayout):
-    settings_manager = settings.Settings()
+    settings_manager = Settings()
     dialog = None
     preview_dialog = None
+    password_dialog = None
 
     def show_settings(self):
         self.dialog = MDDialog(
@@ -48,6 +57,49 @@ class SettingsMenuContent(BoxLayout):
     def hide_preview(self, *args):
         self.preview_dialog.dismiss(force=True)
 
+    def hide_password_dialog(self, *args):
+        self.password_dialog.dismiss(force=True)
+
+    def is_password_valid(self, *args):
+        self.password_dialog.content_cls.ids.PASSWORD.error = True
+        passcode = self.password_dialog.content_cls.ids.PASSWORD.text
+
+        hashed = argon2.hash_password(bytes(passcode, 'utf-8'))
+
+        try:
+            if argon2.verify_password(hashed, bytes(self.settings_manager.get_setting_value('PASSCODE'), 'utf-8')):
+                return True
+        except VerifyMismatchError:
+            return False
+
+    def validate_password(self, *args):
+        if self.is_password_valid() or self.settings_manager.get_setting_value('IS_DEBUG'):
+            self.hide_password_dialog()
+            self.show_settings()
+
+        self.password_dialog.content_cls.ids.PASSWORD.error = True
+
+    def show_password_dialog(self):
+        self.password_dialog = MDDialog(
+            title="Enter Passcode:",
+            type="custom",
+            content_cls=PasswordDialog(),
+            buttons=[
+                MDFlatButton(
+                    text="Submit",
+                    theme_text_color="Custom",
+                    on_release=self.validate_password
+                ),
+                MDFlatButton(
+                    text="Close",
+                    theme_text_color="Custom",
+                    on_release=self.hide_password_dialog
+                ),
+            ],
+        )
+
+        self.password_dialog.open()
+
     def save_settings(self, *args):
         for ident in self.dialog.content_cls.ids:
             element = self.dialog.content_cls.ids[ident]
@@ -79,4 +131,3 @@ class SettingsMenuContent(BoxLayout):
         preview_window = self.preview_dialog.content_cls.ids.preview_image
 
         helpers.PreviewImageHandler(screen_capture.capture_frame(), preview_window).resize_for_preview().update_texture()
-

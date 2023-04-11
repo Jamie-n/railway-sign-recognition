@@ -42,7 +42,7 @@ class InterfaceController(Widget, Subscriber):
             Clock.schedule_once(partial(self.set_current_image, value))
 
     def open_settings(self):
-        SettingsMenuContent().show_settings()
+        SettingsMenuContent().show_password_dialog()
 
     def begin_detection(self):
         self.set_stop_detection_button_enabled(True)
