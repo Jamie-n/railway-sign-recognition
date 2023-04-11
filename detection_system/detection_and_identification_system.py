@@ -22,7 +22,7 @@ class DetectionHandler(Publisher):
     def __init__(self):
         self.detector = DetectionSystem()
         self.screen_capture = ScreenCapture.load_from_settings()
-        self.is_debug = Settings().get_setting_value('IS_DEBUG')
+        self.is_debug = Settings().is_debug()
         self.digit_ident = IdentificationSystem()
 
     def run(self, event):
