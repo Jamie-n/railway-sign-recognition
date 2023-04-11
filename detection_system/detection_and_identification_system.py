@@ -1,3 +1,5 @@
+import time
+
 import pytesseract as pytesseract
 from ultralytics import YOLO
 import cv2
@@ -5,6 +7,7 @@ import utils.constants as constants
 from detection_system.image_detection import ImageDetection
 from detection_system.screen_capture import ScreenCapture
 from interfaces import Publisher, NotificationType
+from utils.settings_helper import Settings
 
 
 class DetectionHandler(Publisher):
@@ -14,14 +17,17 @@ class DetectionHandler(Publisher):
     detector = None
     screen_capture = None
     digit_ident = None
+    is_debug = False
 
     def __init__(self):
         self.detector = DetectionSystem()
         self.screen_capture = ScreenCapture.load_from_settings()
+        self.is_debug = Settings().get_setting_value('IS_DEBUG')
         self.digit_ident = IdentificationSystem()
 
     def run(self, event):
         while not event.isSet():
+            start_time = time.time()
             detection = self.detector.process_frame(self.screen_capture.capture_frame())
             self.current_frame = detection.get_image()
 
@@ -35,6 +41,9 @@ class DetectionHandler(Publisher):
                     self.current_limit = speed
 
                     self.emit(NotificationType.SPEED_LIMIT, speed)
+
+            if self.is_debug:
+                print("Time of Last Detection Cycle: ", round((time.time() - start_time) * 1000, 3), "ms")
 
     def get_preview_image(self):
         return self.current_frame
