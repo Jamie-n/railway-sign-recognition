@@ -9,10 +9,12 @@
     MDTextField:
         id: CAPTURE_HEIGHT
         hint_text: "Capture Height (px)"
+        input_filter: 'int'
 
     MDTextField:
         id: CAPTURE_WIDTH
         hint_text: "Capture Width (px)"
+        input_filter: 'int'
 
     MDTextField:
         id: CAPTURE_DEVICE
@@ -25,15 +27,9 @@
         size: root.width, 30
         on_release: root.preview_capture()
 
-
     MDTextField:
         id: DLL_PATH
         hint_text: "DLL Path"
-        disabled: True
-    MDRaisedButton:
-        text: "Browse"
-        size: root.width, 30
-        on_release: root.preview_capture()
 
     MDGridLayout:
         cols: 2
