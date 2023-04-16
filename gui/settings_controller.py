@@ -2,9 +2,11 @@ from typing import Union
 
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError, VerificationError
+from kivy.metrics import dp
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.boxlayout import BoxLayout
+from kivymd.uix.menu import MDDropdownMenu
 import detection_system.screen_capture as capture
 import utils.helpers as helpers
 from utils.settings_helper import Settings
@@ -24,6 +26,7 @@ class SettingsMenuContent(BoxLayout):
     dialog = None
     preview_dialog = None
     password_dialog = None
+    capture_device_menu = None
 
     def show_settings(self):
         self.dialog = MDDialog(
@@ -50,6 +53,13 @@ class SettingsMenuContent(BoxLayout):
 
         self.dialog.content_cls.ids.IS_DEBUG.active = self.settings_manager.is_debug()
 
+        self.capture_device_menu = MDDropdownMenu(
+            caller=self.dialog.content_cls.ids.CAPTURE_DEVICE,
+            items=self.build_capture_device_list(),
+            position="center",
+            width_mult=4,
+        )
+
         self.dialog.open()
 
     def hide_settings(self, *args):
@@ -58,8 +68,26 @@ class SettingsMenuContent(BoxLayout):
     def hide_preview(self, *args):
         self.preview_dialog.dismiss(force=True)
 
+    def build_capture_device_list(self):
+        menu_items = []
+        devices = capture.ScreenCapture.get_capture_devices()+ ['Screen Capture']
+
+        for device in devices:
+            menu_items.append({
+                "viewclass": "OneLineListItem",
+                "height": dp(56),
+                "text": f"{device}",
+                "on_release": lambda x=f"{device}": self.set_capture_device(x),
+            })
+
+        return menu_items
+
     def hide_password_dialog(self, *args):
         self.password_dialog.dismiss(force=True)
+
+    def set_capture_device(self, capture_device_name):
+        self.dialog.content_cls.ids.CAPTURE_DEVICE.text = capture_device_name
+        self.capture_device_menu.dismiss()
 
     def is_password_valid(self, *args):
         self.password_dialog.content_cls.ids.PASSWORD.error = True
@@ -125,8 +153,7 @@ class SettingsMenuContent(BoxLayout):
 
         self.preview_dialog.open()
 
-        screen_capture = capture.ScreenCapture(capture_width=int(self.ids.CAPTURE_WIDTH.text), capture_height=int(self.ids.CAPTURE_HEIGHT.text))
-
+        screen_capture = capture.ScreenCapture(capture_width=int(self.ids.CAPTURE_WIDTH.text), capture_height=int(self.ids.CAPTURE_HEIGHT.text), capture_device_name=self.ids.CAPTURE_DEVICE.text)
         preview_window = self.preview_dialog.content_cls.ids.preview_image
 
         helpers.PreviewImageHandler(screen_capture.capture_frame(), preview_window).resize_for_preview().update_texture()

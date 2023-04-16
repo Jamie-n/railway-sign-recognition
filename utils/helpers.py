@@ -1,5 +1,3 @@
-import time
-
 import cv2
 from kivy.graphics.texture import Texture
 

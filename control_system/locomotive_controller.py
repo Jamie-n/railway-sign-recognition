@@ -28,6 +28,11 @@ class LocomotiveControlCore(Thread, Publisher, Subscriber):
             self.manage_speed()
             time.sleep(0.1)
 
+        self.set_brake(0)
+        self.set_throttle(0)
+        self.emit(NotificationType.SPEED_MPH, 0)
+
+
     def manage_speed(self):
         self.emit(NotificationType.SPEED_MPH, self.get_speed())
 

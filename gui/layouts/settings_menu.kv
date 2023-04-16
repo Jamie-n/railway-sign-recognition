@@ -17,6 +17,8 @@
     MDTextField:
         id: CAPTURE_DEVICE
         hint_text: "Capture Device"
+        on_focus: if self.focus: root.capture_device_menu.open()
+        readonly: True
 
     MDRaisedButton:
         text: "Preview Capture"
@@ -58,9 +60,6 @@
                 helper_text_mode: "on_error"
                 password: True
 
-
-
-
 <CapturePreview>
     orientation: "vertical"
     spacing: "12dp"
@@ -76,3 +75,5 @@
             Image:
                 id: preview_image
                 size: root.width, root.height
+
+

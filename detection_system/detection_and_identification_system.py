@@ -21,11 +21,12 @@ class DetectionHandler(Publisher):
 
     def __init__(self):
         self.detector = DetectionSystem()
-        self.screen_capture = ScreenCapture.load_from_settings()
         self.is_debug = Settings().is_debug()
         self.digit_ident = IdentificationSystem()
 
     def run(self, event):
+        self.screen_capture = ScreenCapture.load_from_settings()
+
         while not event.isSet():
             start_time = time.time()
             detection = self.detector.process_frame(self.screen_capture.capture_frame())
@@ -38,18 +39,23 @@ class DetectionHandler(Publisher):
                 speed = self.digit_ident.process_frame(detection)
 
                 if speed is not None:
-                    self.current_limit = speed
-
-                    self.emit(NotificationType.SPEED_LIMIT, speed)
+                    self.set_current_limit(speed)
 
             if self.is_debug:
                 print("Time of Last Detection Cycle: ", round((time.time() - start_time) * 1000, 3), "ms")
+
+
+        self.set_current_limit(0.0)
 
     def get_preview_image(self):
         return self.current_frame
 
     def get_current_limit(self):
         return self.current_limit
+
+    def set_current_limit(self, speed):
+        self.current_limit = speed
+        self.emit(NotificationType.SPEED_LIMIT, speed)
 
 
 class FrameProcessor:
