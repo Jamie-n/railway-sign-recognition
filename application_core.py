@@ -41,6 +41,12 @@ class SystemCore:
 
         return True
 
+    def emergency_stop(self):
+        self.locomotive_controller.set_brake(1)
+        self.locomotive_controller.set_throttle(0)
+
+        self.shutdown()
+
     def add_new_process_thread(self, thread):
         self.threads.append(thread)
 

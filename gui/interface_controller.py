@@ -56,6 +56,12 @@ class InterfaceController(Widget, Subscriber):
 
         self.application_core.shutdown()
 
+    def emergency_stop(self):
+        self.set_stop_detection_button_enabled(False)
+        self.set_start_detection_button_enabled(True)
+
+        self.application_core.shutdown()
+
     def set_start_detection_button_enabled(self, enabled_disabled: bool) -> None:
         self.ids.start_detection_button.disabled = not enabled_disabled
 
