@@ -1,6 +1,5 @@
 import array
 import time
-
 from interfaces import Thread, Publisher, NotificationType, Subscriber
 from utils.helpers import PID
 from control_system.control_system import TrainSimClassicAdapter

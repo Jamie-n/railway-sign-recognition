@@ -44,7 +44,6 @@ class DetectionHandler(Publisher):
             if self.is_debug:
                 print("Time of Last Detection Cycle: ", round((time.time() - start_time) * 1000, 3), "ms")
 
-
         self.set_current_limit(0.0)
 
     def get_preview_image(self):
@@ -89,7 +88,7 @@ class DetectionSystem(FrameProcessor, Publisher):
 class IdentificationSystem(FrameProcessor):
 
     def process_frame(self, detections):
-        pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = constants.PY_TESSERACT_INSTALL_PATH
         frame = detections.get_image()
 
         first_detection = detections.get_detections()

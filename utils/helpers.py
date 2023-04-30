@@ -42,6 +42,7 @@ class PreviewImageHandler:
         return ImageHelpers.image_to_texture(self.image_for_preview)
 
 
+# Proportional, Integral, Derivative controller adapted from the formula listed on PID Explained, here:https://pidexplained.com/pid-controller-explained/
 class PID:
     GAIN = 5.5
     CYCLE_TIME = 0.01
@@ -53,16 +54,12 @@ class PID:
     def __call__(self, set_point: int, process_value: int) -> float:
         error = set_point - process_value
 
-        proportional = self.GAIN * error
-
-        integral = self.GAIN * error * self.CYCLE_TIME
-
-        derivative = self.GAIN * 0 / self.CYCLE_TIME
+        p = self.GAIN * error
+        i = self.GAIN * error * self.CYCLE_TIME
+        d = self.GAIN * 0 / self.CYCLE_TIME
 
         self.previous_error = error
 
-        # time.sleep(self.CYCLE_TIME)
-
-        val = proportional + integral + derivative
+        val = p + i + d
 
         return val
