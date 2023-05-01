@@ -66,7 +66,39 @@ class ControlValues(Enum):
     COMPRESSOR_STATE = 'CompressorState'
 
 
-class TrainSimClassicAdapter:
+class LocomotiveControlAdapter:
+    def connect(self) -> None:
+        pass
+
+    def disconnect(self):
+        pass
+
+    def set_control_value(self, control_option, value):
+        pass
+
+    def get_control_value(self, control_option):
+        pass
+
+    def sound_horn(self, value: bool) -> None:
+        pass
+
+    def get_speed(self) -> float:
+        pass
+
+    def set_throttle(self, value: float):
+        pass
+
+    def set_brake(self, value: float):
+        pass
+
+    def get_brake(self):
+        pass
+
+    def get_throttle(self):
+        pass
+
+
+class TrainSimClassicAdapter(LocomotiveControlAdapter):
     dll = None
     connected = bool
 
